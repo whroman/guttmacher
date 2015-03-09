@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" type="text/css" href="./resources/main.css">
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.4.0/lodash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="./bower_components/datamaps/dist/datamaps.usa.min.js"></script>
+  <script src="./data.js"></script>
+  <script src="./resources/maps.js"></script>
+  <script src="./resources/partitions.js"></script>
+
+</head>
+<body class="text-center">
+
+  <h1 class="text-xl">Number of U.S. Births, 2010</h1>
+
+  <div id="num-of-births" class="map"></div>
+
+  <div class="spacer-lg"></div>
+
+  <div
+    d3-partition-graph
+    data-source="JSON/numOfBirthsPartition.json"
+  >
+      <div class="spacer-sm"></div>
+
+      <div
+        info
+      >
+          <div primary>
+              <div title class='text-xl'></div>
+              <div class='spacer-xs'></div>
+              <div class='text-lg'>
+                  <span value></span> <span>Births</span>
+              </div>
+
+          </div>
+          <div secondary>
+              <div class='spacer-sm'></div>
+              <div class='text-md'>
+                  <div>Of Which <span value></span> Were <span title></span></div>
+              </div>
+          </div>
+      </div>
+
+      <div graph></div>
+  </div>
+
+  <div class="spacer-xl"></div>
+
+  <div class="text-xl">Cost Per Birth, 2010</div>
+  <div id="cost-per-birth-total" class="map"></div>
+
+  <div>All Planned U.S. Births, 2010</div>
+  <div id="num-of-planned-births" class="map"></div>
+
+  <div>All Unplanned U.S. Births, 2010</div>
+  <div id="num-of-unplanned-births" class="map"></div>
+
+</body>
