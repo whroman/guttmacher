@@ -21,7 +21,7 @@ function parseNumOfBirths (file) {
         item.shift();
       }
 
-      var state = statesMap[state]
+      state = statesMap[state] || state;
       parsedJSON[state] = {
           "Number of births - All": item[1],
           "Number of births - Unplanned": item[2],
@@ -132,29 +132,5 @@ var statesMap = {
 var numOfBirths = parseNumOfBirths('./raw/num-of-births.txt');
 var costPerBirth = parseCostPerBirth('./raw/cost-per-birth.txt');
 
-var numOfBirthsPartition = {};
-numOfBirthsPartition.title = 'foo';
-numOfBirthsPartition.children = [];
-
-for (var key in numOfBirths) {
-  var item = numOfBirths[key];
-  var child = {
-    title: key,
-    value: extractInteger( item['Number of births - All'] ),
-    children: [
-      {
-        title: 'Planned',
-        value: extractInteger( item['Number of births - Planned'] )
-      },
-      {
-        title: 'Unplanned',
-        value: extractInteger( item['Number of births - Unplanned'] )
-      }
-    ]
-  };
-  numOfBirthsPartition.children.push(child);
-}
-
 fs.writeFileSync('./JSON/numOfBirths.json', JSON.stringify(numOfBirths));
-fs.writeFileSync('./JSON/numOfBirthsPartition.json', JSON.stringify(numOfBirthsPartition));
 fs.writeFileSync('./JSON/costPerBirth.json', JSON.stringify(costPerBirth));

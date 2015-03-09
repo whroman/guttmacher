@@ -1,46 +1,27 @@
 .map {
-    height: 400px;
+    height: 380px;
     width: 800px;
     margin: 0 auto;
     position: relative;
 }
 
-[d3-partition-graph] [info] {
-    position: absolute;
-    width: 300px;
-    margin-left: -150px;
-    left: 50%;
-    margin-top: 240px;
-    z-index: 1;
+a[href], [ng-click] {
+    cursor: pointer;
 }
 
-[d3-partition-graph] svg {
-    overflow: visible;
-    display: block;
-    margin: 0 auto;
+.bg-blue {
+    background-color: #236467;
 }
 
-[d3-partition-graph] path {
-    stroke: #ffffff;
-    -webkit-transition: opacity 0.3s ease;
-       -moz-transition: opacity 0.3s ease;
-         -o-transition: opacity 0.3s ease;
-            transition: opacity 0.3s ease;
-
-}
-
-.faded {
-    opacity: 0.3;
-}
-
-.hidden {
-    display: none;
+.border-blue {
+    border: 1px solid #236467;
 }
 
 [class*="text-"] {
     font-family: helvetica, arial, sans-serif;
     font-weight: 100;
     line-height: 1.3em;
+    letter-spacing: 0.05em;
 }
 
 .text-xs {
@@ -65,6 +46,10 @@
 
 .text-center {
     text-align: center;
+}
+
+.text-white {
+    color: #FFFFFF;
 }
 
 [class*="-spacer-"] {
@@ -103,10 +88,39 @@
     height: 60px;
 }
 
-.Planned {
-    fill: #236467;
+.pad-t, .pad-tb, .pad, .pad-r, .pad-lr, .pad-b, .pad-l {
+    display: inline-block;
 }
 
-.Unplanned {
-    fill: #AA3C39;
+.pad-t, .pad-tb, .pad {
+    padding-top: 0.5em;
+}
+
+.pad-r, .pad-lr, .pad {
+    padding-right: 0.5em;
+}
+
+.pad-b, .pad-tb, .pad {
+    padding-bottom: 0.5em;
+}
+
+.pad-l, .pad-lr, .pad {
+    padding-left: 0.5em;
+}
+
+.round {
+    overflow: auto;
+    border-radius: 8px;
+}
+
+.show {
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
+
+.datamap path {
+    stroke: #ffffff;
 }
