@@ -52,6 +52,11 @@ a[href], [ng-click] {
     color: #FFFFFF;
 }
 
+.text-thin {
+    font-family: 'helvetica neue';
+    letter-spacing: 0.075em;
+}
+
 [class*="-spacer-"] {
     margin: 0;
 

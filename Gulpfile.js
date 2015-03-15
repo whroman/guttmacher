@@ -9,5 +9,4 @@ var options = {
 gulp.task( 'default', function() {
     gulp.src('./')
         .pipe(gp.webserver(options))
-}
-);
+});
