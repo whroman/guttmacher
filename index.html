@@ -20,52 +20,59 @@
   ng-app="guttmacher"
   ng-controller="guttmacher"
 >
-  <div class="spacer-sm"></div>
-  <div class="bg-blue text-white">
+  <div class="header">
     <div class="spacer-sm"></div>
-    <h1 class="text-xl text-thin">Number of U.S. Births, 2010</h1>
-    <div class="spacer-sm"></div>
-  </div>
-  <div class="spacer-sm"></div>
-  <div class="spacer-md"></div>
-  <div class="text-md">{{numOfBirths.maps[numOfBirths.show].total}} Births</div>
-  <div class="spacer-md"></div>
-  <div class="show round border-blue">
-    <div
-      class="pad"
-      ng-repeat="(key, val) in numOfBirths.maps"
-      ng-click="numOfBirths.show = key"
-      ng-class="{
-        'bg-blue text-white': numOfBirths.show === key
-      }"
-    >
-      &nbsp;&nbsp;{{key}}&nbsp;&nbsp;
+    <div class="bg-blue text-white">
+      <div class="spacer-sm"></div>
+      <h1 class="text-xl text-thin">Number of U.S. Births, 2010</h1>
+      <div class="spacer-sm"></div>
     </div>
+    <div class="spacer-sm"></div>
+    <div class="spacer-md"></div>
+    <div class="text-md">{{numOfBirths.maps[numOfBirths.show].total}} {{numOfBirths.show}} Births</div>
+    <div class="spacer-md"></div>
   </div>
 
-  <div
-    ng-repeat="(key, val) in numOfBirths.maps"
-    id="{{val.id}}"
-    ng-if="numOfBirths.show === key"
-  >
-    <div
-      class="map"
-      ng-init="val.render()"
-    ></div>
-    <div class="spacer-sm"></div>
-    <div class="legend">
-      <div ng-repeat="item in val.ranges">
-        <div class="valign-mid">
-          <div
-            class="legend-item"
-            style="background-color:{{item.fill}};"
-          ></div>
-          <span>{{item.title}}</span>
-        </div>
-        <div class="spacer-sm"></div>
+  <div class="page-column">
+    <div class="show round border-blue">
+      <div
+        class="pad"
+        ng-repeat="(key, val) in numOfBirths.maps"
+        ng-click="numOfBirths.show = key"
+        ng-class="{
+          'bg-blue text-white': numOfBirths.show === key
+        }"
+      >
+        &nbsp;&nbsp;{{key}}&nbsp;&nbsp;
       </div>
     </div>
-  </div>
 
-  <div class="spacer-lg"></div>
+    <div
+      ng-repeat="(key, val) in numOfBirths.maps"
+      id="{{val.id}}"
+      ng-if="numOfBirths.show === key"
+    >
+      <div
+        class="map"
+        ng-init="val.render()"
+      ></div>
+      <div class="spacer-lg"></div>
+      <div class="legend valign-mid">
+        <div
+          class="legend-item"
+          ng-repeat="item in val.ranges"
+        >
+          <div class="valign-mid">
+            <div
+              class="legend-icon"
+              style="background-color:{{item.fill}};"
+            ></div>&nbsp;&nbsp;<span>{{item.title}}</span>
+          </div>
+          <div class="spacer-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer-lg"></div>
+  </div>
 </body>

@@ -1,3 +1,8 @@
+.page-column {
+    width: 1000px;
+    margin: 0 auto;
+}
+
 .map {
     height: 380px;
     width: 800px;
@@ -136,6 +141,10 @@ a[href], [ng-click] {
 }
 
 .legend-item {
+    width: 25%;
+}
+
+.legend-icon {
     width: 2em;
     height: 2em;
     display: inline-block;

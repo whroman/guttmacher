@@ -6,14 +6,14 @@ angular.module('guttmacher', [])
 
   $scope.numOfBirths = {};
   $scope.numOfBirths.data = NumOfBirths;
-  $scope.numOfBirths.show = 'All';
+  $scope.numOfBirths.show = 'Total';
 
   $scope.numOfBirths.maps = {};
-  $scope.numOfBirths.maps['All'] = {
+  $scope.numOfBirths.maps['Total'] = {
     id: 'num-of-births-all',
     total: NumOfBirths['Total']['Number of births - All'],
     render: function () {
-      renderMap(NumOfBirths, '#num-of-births-all .map', 'Number of births - All', this.ranges, function (geography, data) {
+      renderMap.bind(this)(NumOfBirths, '#num-of-births-all .map', 'Number of births - All', this.ranges, function (geography, data) {
         return [
           '<div class="hoverinfo text-sm">',
             'Number of Births in ',
@@ -26,62 +26,108 @@ angular.module('guttmacher', [])
     },
     ranges: [
       {
-        title: '$25 - 100 million',
+        title: 'Less than 25,000 Births',
         range: [0, 25000],
         fill: '#F7AC8F'
       },
       {
-        title: '$100 - 400 million',
+        title: '25 - 75,000 Births',
         range: [25000, 75000],
         fill: '#E16B42',
 
       },
       {
-        title: '$400 - 800 million',
+        title: '75 - 200,000 Births',
         range: [75000, 200000],
         fill: '#C65127'
       },
       {
-        title: '$800 million - 3 billion',
-        range: [200000, 550000],
+        title: 'More than 200,000 Births',
+        range: [200000, Infinity],
         fill: '#7F2B18'
       }
     ]
   };
 
-  // $scope.numOfBirths.maps['Planned'] = {
-  //   id: 'num-of-births-planned',
-  //   total: NumOfBirths['Total']['Number of births - Planned'],
-  //   render: function () {
-  //     renderMap(NumOfBirths, '#num-of-births-planned .map', 'Number of births - Planned', function (geography, data) {
-  //       return [
-  //         '<div class="hoverinfo text-sm">',
-  //           'Number of Planned Births in ',
-  //           geography.properties.name,
-  //           ': ',
-  //           data['Number of births - Planned'],
-  //         '</div>'
-  //       ].join('');
-  //     });
-  //   }
-  // };
+  $scope.numOfBirths.maps['Planned'] = {
+    id: 'num-of-births-planned',
+    total: NumOfBirths['Total']['Number of births - Planned'],
+    render: function () {
+      renderMap.bind(this)(NumOfBirths, '#num-of-births-planned .map', 'Number of births - Planned', this.ranges, function (geography, data) {
+        return [
+          '<div class="hoverinfo text-sm">',
+            'Number of Planned Births in ',
+            geography.properties.name,
+            ': ',
+            data['Number of births - Planned'],
+          '</div>'
+        ].join('');
+      });
+    },
+    ranges: [
+      {
+        title: 'Less than 20,000 Births',
+        range: [0, 20000],
+        fill: '#F7AC8F'
+      },
+      {
+        title: '20 - 80,000 Births',
+        range: [20000, 80000],
+        fill: '#E16B42',
 
-  // $scope.numOfBirths.maps['Unplanned'] = {
-  //   id: 'num-of-births-unplanned',
-  //   total: NumOfBirths['Total']['Number of births - Unplanned'],
-  //   render: function () {
-  //     renderMap(NumOfBirths, '#num-of-births-unplanned .map', 'Number of births - Unplanned', function (geography, data) {
-  //       return [
-  //         '<div class="hoverinfo text-sm">',
-  //           'Number of Unplanned Births in ',
-  //           geography.properties.name,
-  //           ': ',
-  //           data['Number of births - Unplanned'],
-  //         '</div>'
-  //       ].join('');
-  //     });
-  //   }
-  // };
+      },
+      {
+        title: '80 - 160,000 Births',
+        range: [80000, 160000],
+        fill: '#C65127'
+      },
+      {
+        title: 'More than 160,000 Births',
+        range: [160000, Infinity],
+        fill: '#7F2B18'
+      }
+    ]
+  };
+
+  $scope.numOfBirths.maps['Unplanned'] = {
+    id: 'num-of-births-unplanned',
+    total: NumOfBirths['Total']['Number of births - Unplanned'],
+    render: function () {
+      renderMap.bind(this)(NumOfBirths, '#num-of-births-unplanned .map', 'Number of births - Unplanned', this.ranges, function (geography, data) {
+        return [
+          '<div class="hoverinfo text-sm">',
+            'Number of Unplanned Births in ',
+            geography.properties.name,
+            ': ',
+            data['Number of births - Unplanned'],
+          '</div>'
+        ].join('');
+      });
+    },
+    ranges: [
+      {
+        title: 'Less than 15,000 Births',
+        range: [0, 15000],
+        fill: '#F7AC8F'
+      },
+      {
+        title: '15 - 50,000 Births',
+        range: [15000, 50000],
+        fill: '#E16B42',
+
+      },
+      {
+        title: '50 - 100,000 Births',
+        range: [50000, 100000],
+        fill: '#C65127'
+      },
+      {
+        title: 'More than 100,000 Births',
+        range: [100000, Infinity],
+        fill: '#7F2B18'
+      }
+    ]
+  };
 
   var util = {};
   util.extractInteger = function (str) {
@@ -98,6 +144,8 @@ angular.module('guttmacher', [])
   };
 
   var renderMap = function (data, selector, propName, fillRanges, popup) {
+    console.log(this, this.ranges)
+    var ranges = this.ranges;
     $timeout(function() {
       var map = new Datamap({
         scope: 'usa',
@@ -123,12 +171,10 @@ angular.module('guttmacher', [])
         _.each(data, function(item, key) {
           var fill = '';
           var value = util.extractInteger(item[propName]);
-          console.log(key, value)
-          _.each(fillRanges, function(fillRange) {
-            console.log(fillRange.range[0], fillRange.range[1])
+          _.each(ranges, function(fillRange) {
+            console.log(fillRange)
             if (_.inRange(value, fillRange.range[0], fillRange.range[1])) fill = fillRange.fill;
           });
-          console.log(fill)
 
           _fills[key] = fill;
         })
