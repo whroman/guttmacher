@@ -126,6 +126,17 @@ a[href], [ng-click] {
     display: none;
 }
 
+.valign-mid > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .datamap path {
     stroke: #ffffff;
+}
+
+.legend-item {
+    width: 2em;
+    height: 2em;
+    display: inline-block;
 }
