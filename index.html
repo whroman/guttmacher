@@ -34,13 +34,17 @@
   </div>
 
   <div class="page-column">
-    <div class="show round border-blue">
+    <div class="show valign-top">
       <div
-        class="pad"
+        class="pad border-blue"
         ng-repeat="(key, val) in numOfBirths.maps"
         ng-click="numOfBirths.show = key"
         ng-class="{
-          'bg-blue text-white': numOfBirths.show === key
+          'bg-blue text-white': (numOfBirths.show === key),
+          'bg-white': !(numOfBirths.show === key),
+          'round-left': $index == 0,
+          'border-tb border-none': $index == 1,
+          'round-right': $index == 2
         }"
       >
         &nbsp;&nbsp;{{key}}&nbsp;&nbsp;
@@ -57,20 +61,33 @@
         ng-init="val.render()"
       ></div>
       <div class="spacer-lg"></div>
-      <div class="legend valign-mid">
+      <div class="legend valign-top">
         <div
-          class="legend-item"
+          class="legend-item pad"
           ng-repeat="item in val.ranges"
         >
-          <div class="valign-mid">
+          <div class="valign-mid text-left pad-lr width-full">
             <div
               class="legend-icon"
               style="background-color:{{item.fill}};"
             ></div>&nbsp;&nbsp;<span>{{item.title}}</span>
           </div>
           <div class="spacer-sm"></div>
+
+          <div
+            ng-repeat="state in numOfBirths.maps[key].groupedByRange[item.fill]"
+            class="pad width-full text-xxs pull-left bg-hover-blue text-hover-white"
+          >
+            <div class="pad-lr width-full clearfix pull-left">
+              <div class="pull-left">{{state.name}}</div>
+              <div class="pull-right">{{state.value}}</div>
+            </div>
+
+          </div>
+
         </div>
       </div>
+
     </div>
 
     <div class="spacer-lg"></div>

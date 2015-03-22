@@ -1,5 +1,5 @@
 .page-column {
-    width: 1000px;
+    width: 1100px;
     margin: 0 auto;
 }
 
@@ -14,7 +14,15 @@ a[href], [ng-click] {
     cursor: pointer;
 }
 
+.bg-white {
+    background-color: #ffffff;
+}
+
 .bg-blue {
+    background-color: #236467;
+}
+
+.bg-hover-blue:hover {
     background-color: #236467;
 }
 
@@ -22,11 +30,24 @@ a[href], [ng-click] {
     border: 1px solid #236467;
 }
 
+.border-none {
+    border-width: 0;
+}
+
+.border-tb {
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
 [class*="text-"] {
     font-family: helvetica, arial, sans-serif;
     font-weight: 100;
     line-height: 1.3em;
     letter-spacing: 0.05em;
+}
+
+.text-xxs {
+    font-size: 12px;
 }
 
 .text-xs {
@@ -53,8 +74,16 @@ a[href], [ng-click] {
     text-align: center;
 }
 
+.text-left {
+    text-align: left;
+}
+
 .text-white {
     color: #FFFFFF;
+}
+
+.text-hover-white:hover {
+    color: #FFFFFF
 }
 
 .text-thin {
@@ -123,6 +152,18 @@ a[href], [ng-click] {
     border-radius: 8px;
 }
 
+.round-left {
+    overflow: auto;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.round-right {
+    overflow: auto;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
 .show {
     display: inline-block;
 }
@@ -134,6 +175,11 @@ a[href], [ng-click] {
 .valign-mid > * {
     display: inline-block;
     vertical-align: middle;
+}
+
+.valign-top > * {
+    display: inline-block;
+    vertical-align: top;
 }
 
 .datamap path {
@@ -148,4 +194,16 @@ a[href], [ng-click] {
     width: 2em;
     height: 2em;
     display: inline-block;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.width-full {
+    width: 100%;
 }

@@ -19,10 +19,11 @@ function parseNumOfBirths (file) {
       } else if (item.length === 12) {
         state = item[0] + ' ' + item[1] + ' ' + item[2];
         item.shift();
+        item.shift();
       }
 
-      state = statesMap[state] || state;
-      parsedJSON[state] = {
+      var abbreviatedStateName = statesMap[state] || state;
+      parsedJSON[abbreviatedStateName] = {
           "Number of births - All": item[1],
           "Number of births - Unplanned": item[2],
           "Number of births - Planned": item[3],
@@ -31,7 +32,8 @@ function parseNumOfBirths (file) {
           "Percent that were publicly funded - Planned": item[6],
           "Number that were publicly funded - All": item[7],
           "Number that were publicly funded - Unplanned": item[8],
-          "Number that were publicly funded - Planned": item[9]
+          "Number that were publicly funded - Planned": item[9],
+          fullName: state
       }
     });
 
