@@ -19,6 +19,7 @@
   class="text-center"
   ng-app="guttmacher"
   ng-controller="guttmacher"
+  ng-cloak
 >
   <div class="header">
     <div class="spacer-sm"></div>
@@ -29,7 +30,7 @@
     </div>
     <div class="spacer-sm"></div>
     <div class="spacer-md"></div>
-    <div class="text-md">{{numOfBirths.maps[numOfBirths.show].total}} {{numOfBirths.show}} Births</div>
+    <div class="text-md">{{numOfBirths.maps[numOfBirths.show].displayTotal}} {{numOfBirths.show}} Births</div>
     <div class="spacer-md"></div>
   </div>
 
@@ -37,59 +38,66 @@
     <div class="show valign-top">
       <div
         class="pad border-blue"
-        ng-repeat="(key, val) in numOfBirths.maps"
-        ng-click="numOfBirths.show = key"
+        ng-repeat="val in util.toArray(numOfBirths.maps) | orderBy : '-total'"
+        ng-click="numOfBirths.selectMap(val.name)"
         ng-class="{
-          'bg-blue text-white': (numOfBirths.show === key),
+          'bg-blue text-white': (numOfBirths.show === val.name),
           'bg-white': !(numOfBirths.show === key),
           'round-left': $index == 0,
           'border-tb border-none': $index == 1,
           'round-right': $index == 2
         }"
       >
-        &nbsp;&nbsp;{{key}}&nbsp;&nbsp;
+        &nbsp;&nbsp;{{val.name}}&nbsp;&nbsp;
       </div>
     </div>
 
-    <div
-      ng-repeat="(key, val) in numOfBirths.maps"
-      id="{{val.id}}"
-      ng-if="numOfBirths.show === key"
-    >
+    <div class="spacer-md"></div>
+    <div class="clearfix">
       <div
-        class="map"
-        ng-init="val.render()"
+        id="num-of-births"
+        class="map pull-left width-75"
       ></div>
-      <div class="spacer-lg"></div>
-      <div class="legend valign-top">
+
+      <div
+        class="pull-left width-25"
+        ng-repeat="(key, val) in numOfBirths.maps"
+        ng-if="numOfBirths.show === key"
+      >
+        <div class="spacer-md"></div>
         <div
-          class="legend-item pad"
+          class="width-full pad"
           ng-repeat="item in val.ranges"
         >
-          <div class="valign-mid text-left pad-lr width-full">
+          <div
+            class="valign-mid text-left pad-lr width-full"
+            ng-click="numOfBirths.legend = numOfBirths.legend === item.title ? '' : item.title"
+          >
             <div
               class="legend-icon"
               style="background-color:{{item.fill}};"
             ></div>&nbsp;&nbsp;<span>{{item.title}}</span>
           </div>
-          <div class="spacer-sm"></div>
 
           <div
-            ng-repeat="state in numOfBirths.maps[key].groupedByRange[item.fill]"
-            class="pad width-full text-xxs pull-left bg-hover-blue text-hover-white"
+            ng-if="numOfBirths.legend == item.title"
           >
-            <div class="pad-lr width-full clearfix pull-left">
-              <div class="pull-left">{{state.name}}</div>
-              <div class="pull-right">{{state.value}}</div>
-            </div>
+            <div class="spacer-sm"></div>
+            <div
+              ng-repeat="state in numOfBirths.maps[key].groupedByRange[item.fill] | orderBy: 'value'"
+              class="pad width-full text-xxs pull-left bg-hover-blue text-hover-white"
+            >
+              <div class="pad-lr width-full clearfix pull-left">
+                <div class="pull-left">{{state.name}}</div>
+                <div class="pull-right">{{state.displayValue}}</div>
+              </div>
 
+            </div>
           </div>
 
         </div>
       </div>
-
     </div>
-
     <div class="spacer-lg"></div>
   </div>
 </body>

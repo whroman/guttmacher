@@ -4,26 +4,89 @@ angular.module('guttmacher', [])
   $timeout,
   $window
 ) {
+  var util = {};
+  util.toArray = function (object) {
+    return _.toArray(object);
+  };
+
+  util.extractInteger = function (str) {
+    return parseFloat(str.replace( /\D+/g, ''));
+  };
+
+  util.invertObject = function (obj) {
+    var newObject = {};
+    var prop;
+
+    for (prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        if (newObject[obj[prop].color] === undefined) {
+          newObject[obj[prop].color] = [];
+        } else {
+          newObject[obj[prop].color].push(prop)
+        }
+      }
+    }
+
+    return newObject;
+  };
+
+  util.generateFillHash = function (data, ranges, propName) {
+      var fill = "";
+
+      var _fillHash = {};
+
+      _.each(data, function(item, key) {
+        var fill = '';
+        var value = util.extractInteger(item[propName]);
+        _.each(ranges, function(fillRange) {
+          if (_.inRange(value, fillRange.range[0], fillRange.range[1])) fill = fillRange.fill;
+        });
+
+
+        _fillHash[key] = data[key];
+        _fillHash[key].color = fill;
+        _fillHash[key].prop = propName;
+      })
+
+      return _fillHash;
+  }
+
+  $scope.util = util;
 
   $scope.numOfBirths = {};
   $scope.numOfBirths.data = NumOfBirths;
-  $scope.numOfBirths.show = 'Unplanned';
+  $scope.numOfBirths.show = 'Total';
+  $scope.numOfBirths.legend = '';
+  $scope.numOfBirths.selectMap = function (name) {
+    var map = this.maps[name];
+    this.show = name;
+    var legend = map.ranges[3].title;
+    this.legend = legend;
+    map.update();
+  };
+
+  $scope.numOfBirths.render = function () {
+    renderMap.bind(this)(NumOfBirths, '#num-of-births.map', function (geography, data) {
+      return [
+        '<div class="hoverinfo text-sm">',
+          'Number of Births in ',
+          geography.properties.name,
+          ': ',
+          data[data.prop],
+        '</div>'
+      ].join('');
+    });
+  }
 
   $scope.numOfBirths.maps = {};
   $scope.numOfBirths.maps['Total'] = {
+    name: 'Total',
     id: 'num-of-births-all',
-    total: NumOfBirths['Total']['Number of births - All'],
-    render: function () {
-      renderMap.bind(this)(NumOfBirths, '#num-of-births-all .map', 'Number of births - All', this.ranges, function (geography, data) {
-        return [
-          '<div class="hoverinfo text-sm">',
-            'Number of Births in ',
-            geography.properties.name,
-            ': ',
-            data['Number of births - All'],
-          '</div>'
-        ].join('');
-      });
+    prop: 'Number of births - All',
+    total: util.extractInteger(NumOfBirths['Total']['Number of births - All']),
+    displayTotal: NumOfBirths['Total']['Number of births - All'],
+    update: function () {
+      updateMap.bind($scope.numOfBirths)('Total');
     },
     ranges: [
       {
@@ -51,19 +114,13 @@ angular.module('guttmacher', [])
   };
 
   $scope.numOfBirths.maps['Planned'] = {
+    name: 'Planned',
     id: 'num-of-births-planned',
-    total: NumOfBirths['Total']['Number of births - Planned'],
-    render: function () {
-      renderMap.bind(this)(NumOfBirths, '#num-of-births-planned .map', 'Number of births - Planned', this.ranges, function (geography, data) {
-        return [
-          '<div class="hoverinfo text-sm">',
-            'Number of Planned Births in ',
-            geography.properties.name,
-            ': ',
-            data['Number of births - Planned'],
-          '</div>'
-        ].join('');
-      });
+    prop: 'Number of births - Planned',
+    total: util.extractInteger(NumOfBirths['Total']['Number of births - Planned']),
+    displayTotal: NumOfBirths['Total']['Number of births - Planned'],
+    update: function () {
+      updateMap.bind($scope.numOfBirths)('Planned');
     },
     ranges: [
       {
@@ -91,19 +148,13 @@ angular.module('guttmacher', [])
   };
 
   $scope.numOfBirths.maps['Unplanned'] = {
+    name: 'Unplanned',
     id: 'num-of-births-unplanned',
-    total: NumOfBirths['Total']['Number of births - Unplanned'],
-    render: function () {
-      renderMap.bind(this)(NumOfBirths, '#num-of-births-unplanned .map', 'Number of births - Unplanned', this.ranges, function (geography, data) {
-        return [
-          '<div class="hoverinfo text-sm">',
-            'Number of Unplanned Births in ',
-            geography.properties.name,
-            ': ',
-            data['Number of births - Unplanned'],
-          '</div>'
-        ].join('');
-      });
+    prop: 'Number of births - Unplanned',
+    total: util.extractInteger(NumOfBirths['Total']['Number of births - Unplanned']),
+    displayTotal: NumOfBirths['Total']['Number of births - Unplanned'],
+    update: function () {
+      updateMap.bind($scope.numOfBirths)('Unplanned');
     },
     ranges: [
       {
@@ -130,74 +181,11 @@ angular.module('guttmacher', [])
     ]
   };
 
-  var util = {};
-  util.extractInteger = function (str) {
-    return parseFloat(str.replace( /\D+/g, ''));
-  };
-  util.lightenColor = function (color, percent) {
-    color = (color[0] === '#') ? color.slice(1) : color;
-    var num = parseInt(color,16);
-    var amt = Math.round(2.55 * percent);
-    var R = (num >> 16) + amt;
-    var G = (num >> 8 & 0x00FF) + amt;
-    var B = (num & 0x0000FF) + amt;
-    return '#' + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
-  };
-
-  util.invertObject = function (obj) {
-    var newObject = {};
-    var prop;
-
-    for (prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        if (newObject[obj[prop]] === undefined) {
-          newObject[obj[prop]] = [];
-        } else {
-          newObject[obj[prop]].push(prop)
-        }
-      }
-    }
-
-    return newObject;
-  };
-
-  util.generateFillHash = function (data, ranges, propName) {
-      var fill = "";
-
-      var _fillHash = {};
-
-      _.each(data, function(item, key) {
-        var fill = '';
-        var value = util.extractInteger(item[propName]);
-        _.each(ranges, function(fillRange) {
-          if (_.inRange(value, fillRange.range[0], fillRange.range[1])) fill = fillRange.fill;
-        });
-
-        _fillHash[key] = fill;
-      })
-
-      return _fillHash;
-  }
-
-  var renderMap = function (data, selector, propName, fillRanges, popup) {
-    var ranges = this.ranges;
-    $timeout(function() {
-      var map = new Datamap({
-        scope: 'usa',
-        element: $(selector)[0],
-        geographyConfig: {
-          borderColor: '#FFFFFF',
-          highlightBorderColor: '#FFFFFF',
-          highlightFillColor: '#527E80',
-          popupTemplate: popup,
-          highlightBorderWidth: 1
-        },
-        data: data,
-        fills: {
-          defaultFill: '#FFFFFF'
-        }
-      });
-
+  var updateMap = function (name) {
+      var data = this.data
+      var ranges = this.maps[name].ranges;
+      var propName = this.maps[name].prop
+      var map = this.map;
       var chloroplethHash = util.generateFillHash(data, ranges, propName);
 
       var keysByRange = util.invertObject(chloroplethHash);
@@ -209,28 +197,44 @@ angular.module('guttmacher', [])
         _.each(items, function (stateKey) {
           var state = {
             name: data[stateKey].fullName,
-            value: data[stateKey][propName]
+            displayValue: data[stateKey][propName],
+            value: util.extractInteger(data[stateKey][propName])
           };
           groupedByRange[key].push(state)
         });
       });
 
-
-      this.groupedByRange = groupedByRange;
-
-      console.log(chloroplethHash, keysByRange, groupedByRange)
+      this.maps[name].groupedByRange = groupedByRange;
 
       map.updateChoropleth(chloroplethHash);
+  };
 
-      // $timeout(function() {
-        // map.labels();
-      // }, 100)
-    }.bind(this), 10);
+  var renderMap = function (data, selector, popup) {
+    this.map = new Datamap({
+      scope: 'usa',
+      element: $(selector)[0],
+      geographyConfig: {
+        borderColor: '#FFFFFF',
+        highlightBorderColor: '#FFFFFF',
+        highlightFillColor: '#527E80',
+        popupTemplate: popup,
+        highlightBorderWidth: 1
+      },
+      data: data,
+      fills: {
+        defaultFill: '#FFFFFF'
+      }
+    });
+
   }
+
+  $timeout(function() {
+    $scope.numOfBirths.render();
+    $scope.numOfBirths.selectMap('Total');
+  }.bind(this), 100);
 
   // Dev
   $window.logScope = function () {
       $window.$scope = $scope;
-      console.log($scope);
   };
 });

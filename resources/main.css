@@ -207,3 +207,17 @@ a[href], [ng-click] {
 .width-full {
     width: 100%;
 }
+
+.width-25 {
+    width: 25%;
+}
+
+.width-75 {
+    width: 75%
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
