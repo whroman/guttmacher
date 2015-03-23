@@ -33,6 +33,7 @@ function parseNumOfBirths (file) {
           "Number that were publicly funded - All": item[7],
           "Number that were publicly funded - Unplanned": item[8],
           "Number that were publicly funded - Planned": item[9],
+          abbreviatedName: abbreviatedStateName,
           fullName: state
       }
     });

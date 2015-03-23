@@ -86,9 +86,11 @@
             <div
               ng-repeat="state in numOfBirths.maps[key].groupedByRange[item.fill] | orderBy: 'value'"
               class="pad width-full text-xxs pull-left bg-hover-blue text-hover-white"
+              ng-mouseover="numOfBirths.mouseover(state.abbreviatedName)"
+              ng-mouseout="numOfBirths.mouseout(state.abbreviatedName)"
             >
               <div class="pad-lr width-full clearfix pull-left">
-                <div class="pull-left">{{state.name}}</div>
+                <div class="pull-left">{{state.fullName}}</div>
                 <div class="pull-right">{{state.displayValue}}</div>
               </div>
 

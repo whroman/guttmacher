@@ -49,7 +49,9 @@ angular.module('guttmacher', [])
       })
 
       return _fillHash;
-  }
+  };
+
+
 
   $scope.util = util;
 
@@ -57,6 +59,17 @@ angular.module('guttmacher', [])
   $scope.numOfBirths.data = NumOfBirths;
   $scope.numOfBirths.show = 'Total';
   $scope.numOfBirths.legend = '';
+
+  $scope.numOfBirths.mouseover = function (selector) {
+    $('.datamaps-hoverover').addClass('hidden');
+    $('#num-of-births path.' + selector).d3Trigger('mouseover');
+  };
+
+  $scope.numOfBirths.mouseout = function (selector) {
+    $('.datamaps-hoverover').removeClass('hidden');
+    $('#num-of-births path.' + selector).d3Trigger('mouseout');
+  };
+
   $scope.numOfBirths.selectMap = function (name) {
     var map = this.maps[name];
     this.show = name;
@@ -196,7 +209,8 @@ angular.module('guttmacher', [])
         groupedByRange[key] = [];
         _.each(items, function (stateKey) {
           var state = {
-            name: data[stateKey].fullName,
+            fullName: data[stateKey].fullName,
+            abbreviatedName: data[stateKey].abbreviatedName,
             displayValue: data[stateKey][propName],
             value: util.extractInteger(data[stateKey][propName])
           };
@@ -238,3 +252,11 @@ angular.module('guttmacher', [])
       $window.$scope = $scope;
   };
 });
+
+jQuery.fn.d3Trigger = function (eventName) {
+  this.each(function (i, e) {
+    var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent(eventName, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    e.dispatchEvent(evt);
+  });
+};
